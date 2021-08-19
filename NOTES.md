@@ -21,6 +21,7 @@ Rogue allows for user defined data sources which can stream data to one or more 
 We can define a single Rogue-type source using different channels for our different 
 which can forward the data on to a central stream.
 
+```
 HGC ROC 0 Link 0 --------| rogue channel 0 |
 HGC ROC 0 Link 1 --------| rogue channel 1 |                   | -- event building
 HGC ROC 1 Link 0 --------| rogue channel 2 |                   |
@@ -30,3 +31,4 @@ QIE Chip 0 --------------|    .........    |                   | -- dqm
 QIE Chip 1 --------------|                 |
   ....                   |                 |
 Other Chip Type ---------|                 |
+```
