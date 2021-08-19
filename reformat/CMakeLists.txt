@@ -37,3 +37,4 @@ clear_cache_variables()
 # The framework has all the backend code needed to run all processors.
 add_subdirectory(Framework)
 
+add_subdirectory(hexaboard)
