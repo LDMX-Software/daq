@@ -1,5 +1,5 @@
 
-name: Build
+name: Build DAQ Environment
 
 on:
   push:
@@ -37,7 +37,7 @@ jobs:
       name: Determine Image Tags
       id: generate_tag
       run: |
-          _repo=ldmx/dev
+          _repo=tomeichlersmith/daq-env
           _tag=noop
           if [[ $GITHUB_REF == refs/tags/* ]]; then
             # if pushing a git tag ==> get the git tag for the docker tag
