@@ -3,10 +3,12 @@
 
 #include <iostream>
 #include <deque>
+#include <fstream>
 
-#include <boost/archive/binary_oarchive.hpp>
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/serialization/vector.hpp>
+
+#include "ReformatBase/RawDataFile.h"
 
 /**
  * The HGCROC Data buffer size is fixed by the construction of the hardware.
@@ -32,9 +34,9 @@ namespace hexareformat {
  * Each instance of this class represents an individual sample 
  * from each channel on both halves of the ROC.
  */
-class HGCROCv2RawData {
+class HGCROCv2RawDataSample {
  public:
-  HGCROCv2RawData() {}
+  HGCROCv2RawDataSample() {}
 
   int event() const { return m_event; }
 
@@ -44,7 +46,7 @@ class HGCROCv2RawData {
     return chiphalf == 0 ? m_data0 : m_data1;
   }
 
-  friend std::ostream& operator<<(std::ostream& out, const HGCROCv2RawData& h);
+  friend std::ostream& operator<<(std::ostream& out, const HGCROCv2RawDataSample& h);
 
  private:
   friend class boost::serialization::access;
@@ -57,10 +59,31 @@ class HGCROCv2RawData {
   }
 
  private:
-  int m_event;
+  int m_event{-1};
   int m_chip;
   std::vector<uint32_t> m_data0;
   std::vector<uint32_t> m_data1;
+};  // HGCROCv2RawDataSample
+
+/**
+ * This is the full raw data channel.
+ */
+class HGCROCv2RawData : public reformatbase::RawDataFile {
+  public:
+   HGCROCv2RawData(const std::string& input_file) : input_stream_{input_file}, input_archive_{input_stream_}, reformatbase::RawDataFile(input_file) {}
+   ~HGCROCv2RawData() = default;
+
+   /// read in the data for the next event and put it on the bus
+   bool next(framework::Event& event);
+
+  private:
+   /// the input file stream
+   std::ifstream input_stream_;
+   /// the archive we are reading in
+   boost::archive::binary_iarchive input_archive_;
+   /// the sample we are using for reading
+   HGCROCv2RawDataSample the_sample_;
+
 };  // HGCROCv2RawData
 
 }  // hexareformat

@@ -29,8 +29,8 @@ void Converter::convert(const std::string& output_filename, int run, int start_e
     eh.setEventNumber(i_event++);
     eh.setTimestamp(TTimeStamp());
 
-    for (auto& [name, channel] : data_channels_) {
-      more_events = channel->next(output_event);
+    for (auto& [name, file] : data_files_) {
+      more_events = file->next(output_event);
     }
   }
 

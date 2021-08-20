@@ -41,4 +41,4 @@ add_subdirectory(Framework)
 add_subdirectory(ReformatBase)
 
 # specific hexactrl-sw translator
-#add_subdirectory(hexaboard)
+add_subdirectory(HexaBoard)

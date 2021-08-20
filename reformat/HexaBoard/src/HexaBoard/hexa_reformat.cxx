@@ -1,16 +1,12 @@
-#include <TFile.h>
-
 #include <algorithm>
-#include <boost/archive/binary_iarchive.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/program_options.hpp>
-#include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
 
-#include "HGCROCv2RawData.h"
-#include "RawEventFile.h"
+#include "ReformatBase/Converter.h"
+#include "HexaBoard/HGCROCv2RawData.h"
 
 int main(int argc, char** argv) {
   std::string m_input, m_output;
@@ -56,24 +52,20 @@ int main(int argc, char** argv) {
     return 2;
   }
 
-  hexareformat::HGCROCv2RawData inroc0;
-  std::ifstream infile{m_input.c_str()};
-  boost::archive::binary_iarchive ia{infile};
 
-  hexareformat::RawEventFile out_file(m_output, m_debug);
-  while (true) {
-    try {
-      ia >> inroc0;
-      out_file.fill(inroc0);
-    } catch (boost::archive::archive_exception&) {
-      // nothing more from archive to read
-      if (m_debug)
-        std::cout << "Received End-Of-File from Boost archive." << std::endl;
-      break;
-    } catch (std::exception& e) {
-      std::cerr << "ERROR: " << e.what() << std::endl;
-      return 1;
-    }
+  try {
+    reformatbase::Converter c;
+    c.insert<hexareformat::HGCROCv2RawData>("hgcroc", m_input);
+
+    c.convert(m_output,1);
+  } catch (const framework::exception::Exception& e) {
+    std::cerr << "[" << e.name() << "] : " << e.message() << "\n"
+      << "  at " << e.module() << ":" << e.line() << " in " << e.function()
+      << "\n  Stack trace: " << std::endl << e.stackTrace();
+    return 127;
+  } catch (const boost::archive::archive_exception& e) {
+    std::cerr << "ERROR [Boost] : " << e.what() << std::endl;
+    return 126;
   }
 
   return 0;
