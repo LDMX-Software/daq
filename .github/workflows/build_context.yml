@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - 'context/**'
+      - '.github/workflows/build_context.yml'
     branches:
       - '**'
     tags:
