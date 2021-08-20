@@ -13,7 +13,7 @@ setup_library(module HexaBoard
                            Boost::serialization)
               
 # Add the executable
-add_executable(hexa-reformat ${PROJECT_SOURCE_DIR}/src/HexaBoard/hexa_reformat.cxx)
+add_executable(hexa-reformat ${PROJECT_SOURCE_DIR}/app/hexa_reformat.cxx)
 target_link_libraries(hexa-reformat 
                       PUBLIC HexaBoard::HexaBoard
                              Boost::program_options)

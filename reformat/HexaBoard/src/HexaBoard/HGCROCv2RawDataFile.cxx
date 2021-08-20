@@ -1,9 +1,21 @@
-#include "HexaBoard/HGCROCv2RawData.h"
+#include "HexaBoard/HGCROCv2RawDataFile.h"
 
 #include <algorithm>
 #include <iomanip>
 #include <boost/crc.hpp>
 
+/**
+ * The number of readout channels is defined by the hardware
+ * construction of a HGC ROC as well as our DAQ readout specs.
+ *
+ * We have defined a method for keeping track of zero suppression
+ * along the DAQ path using a bit-map. Since we aren't using
+ * zero suppression currently in the hexactrl-sw DAQ, this ends
+ * up being a map of all ones.
+ *
+ * We have 38 channels that are always read out plus
+ *  a header word at the top and a CRC checksum at the bottom
+ */
 #define N_READOUT_CHANNELS 40
 
 namespace hexareformat {
@@ -58,23 +70,21 @@ struct CRC {
   auto get() { return crc.checksum(); }
 };
 
-std::ostream& operator<<(std::ostream& out, const HGCROCv2RawDataSample& rawdata) {
-  out << "event = " << std::dec << rawdata.m_event << " "
-      << "chip = " << std::dec << rawdata.m_chip << std::endl;
+void HGCROCv2RawDataFile::Sample::stream(std::ostream& out) const {
+  out << "event = " << std::dec << m_event << " "
+      << "chip = " << std::dec << m_chip << std::endl;
 
   out << "first half :";
-  for (auto d : rawdata.m_data0)
+  for (auto d : m_data0)
     out << "  " << std::hex << std::setfill('0') << std::setw(8) << d;
   out << std::endl;
   out << "second half :";
-  for (auto d : rawdata.m_data1)
+  for (auto d : m_data1)
     out << "  " << std::hex << std::setfill('0') << std::setw(8) << d;
   out << std::dec << std::endl;
-
-  return out;
 }
 
-bool HGCROCv2RawData::next(framework::Event& event) {
+bool HGCROCv2RawDataFile::next(framework::Event& event) {
   static bool first_sample{true};
 
   try {

@@ -6,7 +6,7 @@
 #include <sstream>
 
 #include "ReformatBase/Converter.h"
-#include "HexaBoard/HGCROCv2RawData.h"
+#include "HexaBoard/HGCROCv2RawDataFile.h"
 
 int main(int argc, char** argv) {
   std::string m_input, m_output;
@@ -55,7 +55,7 @@ int main(int argc, char** argv) {
 
   try {
     reformatbase::Converter c;
-    c.insert<hexareformat::HGCROCv2RawData>("hgcroc", m_input);
+    c.insert<hexareformat::HGCROCv2RawDataFile>("hgcroc", m_input);
 
     c.convert(m_output,1);
   } catch (const framework::exception::Exception& e) {
