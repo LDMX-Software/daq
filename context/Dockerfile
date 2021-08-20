@@ -112,5 +112,6 @@ COPY ./rogue-env.sh ${__ldmx_env_script_d__}/
 ###############################################################################
 # cppyy
 ###############################################################################
-RUN python3 -m pip install cppyy
+RUN python3 -m pip install cppyy_backend &&\
+    python3 -m pip install cppyy
 
