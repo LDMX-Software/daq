@@ -1,2 +1,6 @@
 # ignore singularity image files
 *.sif
+
+# ignore buffer files from text editors
+*~
+*.swp
