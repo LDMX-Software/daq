@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - 'context/**'
+      - '!context/README.md'
       - '.github/workflows/build_context.yml'
     branches:
       - '**'
