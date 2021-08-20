@@ -32,10 +32,10 @@ namespace hexareformat {
 class HGCROCv2RawDataFile : public reformatbase::RawDataFile {
  public:
   /// open up boost binary archive from input file
-  HGCROCv2RawDataFile(const std::string& input_file)
-      : input_stream_{input_file},
+  HGCROCv2RawDataFile(const framework::config::Parameters& ps)
+      : input_stream_{ps.getParameter<std::string>("input_file")},
         input_archive_{input_stream_},
-        reformatbase::RawDataFile(input_file) {}
+        reformatbase::RawDataFile(ps) {}
  
   /// default destructor, closes up boost archive and input stream
   ~HGCROCv2RawDataFile() = default;

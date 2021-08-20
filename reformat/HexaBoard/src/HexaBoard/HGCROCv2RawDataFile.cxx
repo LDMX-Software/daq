@@ -256,3 +256,5 @@ bool HGCROCv2RawDataFile::next(framework::Event& event) {
 }
 
 }  // namespace hexareformat
+
+DELCARE_RAW_DATA_FILE(hexareformat, HGCROCv2RawDataFile)

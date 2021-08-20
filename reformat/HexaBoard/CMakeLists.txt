@@ -11,11 +11,5 @@ find_package(
 setup_library(module HexaBoard 
               dependencies ReformatBase::ReformatBase
                            Boost::serialization)
-              
-# Add the executable
-add_executable(hexa-reformat ${PROJECT_SOURCE_DIR}/app/hexa_reformat.cxx)
-target_link_libraries(hexa-reformat 
-                      PUBLIC HexaBoard::HexaBoard
-                             Boost::program_options)
-install(TARGETS hexa-reformat
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+
+setup_python(package_name Reformat/HexaBoard)
