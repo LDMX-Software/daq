@@ -41,7 +41,6 @@ RUN apt-get update &&\
         python3-pip \
         python3-numpy \
         python3-tk \
-        python-is-python3 \
         srm-ifce-dev \
         wget \
     && rm -rf /var/lib/apt/lists/* &&\
@@ -63,11 +62,7 @@ ENV __prefix /usr/local
 ENV __ldmx_env_script_d__ /etc/ldmx-container-env.d
 RUN mkdir ${__ldmx_env_script_d__}
 
-###############################################################################
-# Rogue
-###############################################################################
-COPY ./rogue-env.sh ${__ldmx_env_script_d__}/
-
+WORKDIR /ldmx
 ###############################################################################
 # Boost
 ###############################################################################
@@ -108,3 +103,9 @@ RUN mkdir src &&\
 COPY ./entry.sh /etc/
 RUN chmod 755 /etc/entry.sh
 ENTRYPOINT ["/etc/entry.sh"]
+
+###############################################################################
+# Rogue
+###############################################################################
+COPY ./rogue-env.sh ${__ldmx_env_script_d__}/
+
