@@ -5,6 +5,12 @@ Reformat raw data into a Framework EventFile.
 This reformatting is not meant to decode any data, that is meant to be done downstream inside of ldmx-sw.
 Instead, this set of programs is meant to be a starting point for future online event building.
 
-## core
+## Framework
+The Framework module from ldmx-sw.
+
+## cmake
+Common cmake macros used in LDMX-Software.
+
+## ReformatBase
 This is the module that is the main interface between different serialization schemes (Rogue, Boost.Serialization,...)
-and the Framework EventFile. Look into it's README for defining a specific reformatting application.
+and the Framework EventFile.
