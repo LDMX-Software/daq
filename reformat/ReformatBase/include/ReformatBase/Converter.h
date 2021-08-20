@@ -12,38 +12,31 @@ namespace reformatbase {
  */
 class Converter {
  public:
-  /// insert a new (default constructed) cahnnel
-  template <typename FileType>
-  void insert(const std::string& file_name, const std::string& filename) {
-    if (data_files_.find(file_name) != data_files_.end())
-      EXCEPTION_RAISE("RepeatFile", "File '" + file_name +
-                                           "' has already been inserted.");
+  /// un-interesting default constructor
+  Converter() = default;
+  /// un-interested default destructor
+  ~Converter() = default;
 
-    data_files_[file_name] = std::make_unique<FileType>(filename);
-  }
-
-  /// get a specific file for pre/post processing
-  template <typename FileType>
-  FileType& get(const std::string& file_name) {
-    try {
-      return dynamic_cast<FileType&>(*data_files_.at(file_name));
-    } catch (std::bad_cast&) {
-      EXCEPTION_RAISE("FileType",
-                      "File '" + file_name +
-                          "' has a different type than the one passed.");
-    } catch (std::out_of_range&) {
-      EXCEPTION_RAISE("FileDef",
-                      "File '" + file_name +
-                          "' has not been inserted into the converter.");
-    }
-  }
+  /**
+   * Configure our converter based off the configuration parameters
+   * decoded from the passed python script
+   */
+  void configure(const framework::config::Parameters& configuration);
 
   /// actual run conversion
-  void convert(const std::string& output_filename, int run, int start_event = 0, const std::string& pass = "raw");
+  void convert();
 
  private:
   /// set of data files and their associated names
   std::map<std::string, std::unique_ptr<RawDataFile>> data_files_;
+  /// pass name to use for output event tree
+  std::string pass_;
+  /// output file name to write data to
+  std::string output_filename_;
+  /// run number to use for output event tree
+  int run_;
+  /// starting event number
+  int start_event_;
 
 };  // Converter
 
