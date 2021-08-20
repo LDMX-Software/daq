@@ -34,7 +34,11 @@ endif()
 # Clear any variables cached during previous configuration cycles. 
 clear_cache_variables()
 
-# The framework has all the backend code needed to run all processors.
+# The framework has all the backend code to write EventFiles
 add_subdirectory(Framework)
 
-add_subdirectory(hexaboard)
+# helper classes for interfacing between EventFiles and Raw data channels
+add_subdirectory(ReformatBase)
+
+# specific hexactrl-sw translator
+#add_subdirectory(hexaboard)

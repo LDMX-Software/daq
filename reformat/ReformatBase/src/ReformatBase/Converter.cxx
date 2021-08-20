@@ -1,20 +1,20 @@
 
-#include "core/Converter.h"
+#include "ReformatBase/Converter.h"
 
 #include <ctime>
 
+#include "Framework/EventFile.h"
+#include "Framework/Event.h"
+#include "Framework/EventHeader.h"
+#include "Framework/RunHeader.h"
 #include "TTimeStamp.h"
 
-#include "Framework/Configure/Parameteres.h"
-#include "Framework/RunHeader.h"
-#include "Framework/EventHeader.h"
+namespace reformatbase {
 
-namespace reformat {
-namespace core {
-
-Converter::convert(const std::string& output_filename, int run, int start_event, const std::string& pass) {
+void Converter::convert(const std::string& output_filename, int run, int start_event, const std::string& pass) {
   framework::Event output_event(pass);
-  framework::EventFile output_file({}, output_filename, nullptr, true, true, false); 
+  framework::EventFile output_file({}, output_filename, nullptr, true, true,
+                                   false);
   output_file.setupEvent(&output_event);
 
   ldmx::RunHeader run_header(run);
@@ -24,12 +24,12 @@ Converter::convert(const std::string& output_filename, int run, int start_event,
   bool more_events{true};
   int i_event{start_event};
   while (more_events) {
-    ldmx::EventHeader &eh = output_event.getEventHeader();
+    ldmx::EventHeader& eh = output_event.getEventHeader();
     eh.setRun(run);
     eh.setEventNumber(i_event++);
     eh.setTimestamp(TTimeStamp());
 
-    for (auto& [name, channel] : data_channels) {
+    for (auto& [name, channel] : data_channels_) {
       more_events = channel->next(output_event);
     }
   }
@@ -38,5 +38,4 @@ Converter::convert(const std::string& output_filename, int run, int start_event,
   output_file.close();
 }
 
-}
-}
+}  // namespace reformatbase

@@ -1,10 +1,10 @@
-#ifndef REFORMAT_CORE_CONVERTER_H_
-#define REFORMAT_CORE_CONVERTER_H_
+#ifndef REFORMATBASE_CONVERTER_H_
+#define REFORMATBASE_CONVERTER_H_
 
-#include "core/RawDataChannel.h"
+#include "Framework/Exception/Exception.h"
+#include "ReformatBase/RawDataChannel.h"
 
-namespace reformat {
-namespace core {
+namespace reformatbase {
 
 /**
  * Class to convert the passed raw data channels into a
@@ -14,14 +14,31 @@ class Converter {
  public:
   /// insert a new (default constructed) cahnnel
   template <typename ChannelType>
-  bool insert(const std::string& channel_name);
+  void insert(const std::string& channel_name) {
+    if (data_channels_.find(channel_name) != data_channels_.end())
+      EXCEPTION_RAISE("RepeatChannel", "Channel '" + channel_name +
+                                           "' has already been inserted.");
+    data_channels_[channel_name] = std::make_unique<ChannelType>();
+  }
 
   /// get a specific channel for pre/post processing
   template <typename ChannelType>
-  ChannelType& get(const std::string& channel_name);
+  ChannelType& get(const std::string& channel_name) {
+    try {
+      return dynamic_cast<ChannelType&>(*data_channels_.at(channel_name));
+    } catch (std::bad_cast&) {
+      EXCEPTION_RAISE("ChannelType",
+                      "Channel '" + channel_name +
+                          "' has a different type than the one passed.");
+    } catch (std::out_of_range&) {
+      EXCEPTION_RAISE("ChannelDef",
+                      "Channel '" + channel_name +
+                          "' has not been inserted into the converter.");
+    }
+  }
 
   /// actual run conversion
-  void convert(int run, int start_event = 0, const std::string& pass = "raw");
+  void convert(const std::string& output_filename, int run, int start_event = 0, const std::string& pass = "raw");
 
  private:
   /// set of data channels and their associated names
@@ -29,7 +46,6 @@ class Converter {
 
 };  // Converter
 
-}  // namespace core
-}  // namespace reformat
+}  // namespace reformatbase
 
-#endif  // REFORMAT_CORE_CONVERTER_H_
+#endif  // REFORMATBASE_CONVERTER_H_
