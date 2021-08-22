@@ -1,5 +1,5 @@
 
-#include "ReformatBase/Converter.h"
+#include "Reformat/Converter.h"
 
 #include <ctime>
 
@@ -9,7 +9,7 @@
 #include "Framework/RunHeader.h"
 #include "TTimeStamp.h"
 
-namespace reformatbase {
+namespace reformat {
 
 void Converter::configure(const framework::config::Parameters& cfg) {
   pass_ = cfg.getParameter<std::string>("pass_name");  // pass is a keyword in Python
@@ -68,4 +68,4 @@ void Converter::convert() {
   output_file.close();
 }
 
-}  // namespace reformatbase
+}  // namespace reformat

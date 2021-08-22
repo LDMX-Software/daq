@@ -41,7 +41,7 @@ add_subdirectory(Framework)
 include(CTest)
 
 # helper classes for interfacing between EventFiles and Raw data channels
-add_subdirectory(ReformatBase)
+add_subdirectory(Reformat)
 
 # specific hexactrl-sw translator
 add_subdirectory(HexaBoard)

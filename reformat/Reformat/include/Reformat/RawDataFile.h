@@ -1,11 +1,12 @@
-#ifndef REFORMATBASE_RAWDATAFILE_H_
-#define REFORMATBASE_RAWDATAFILE_H_
+#ifndef REFORMAT_RAWDATAFILE_H_
+#define REFORMAT_RAWDATAFILE_H_
 
-#include <memory> //for unique pointer
-#include "Framework/Event.h"
+#include <memory>  //for unique pointer
+
 #include "Framework/Configure/Parameters.h"
+#include "Framework/Event.h"
 
-namespace reformatbase {
+namespace reformat {
 
 /// forward declaration for the builder and ptr typedefs
 class RawDataFile;
@@ -14,7 +15,8 @@ class RawDataFile;
 typedef std::unique_ptr<RawDataFile> RawDataFilePtr;
 
 /// typedef for the creation of a raw data file
-typedef RawDataFilePtr RawDataFileBuilder(const framework::config::Parameters& ps);
+typedef RawDataFilePtr RawDataFileBuilder(
+    const framework::config::Parameters& ps);
 
 /**
  * @class RawDataFile
@@ -41,11 +43,12 @@ class RawDataFile {
    * @return true if we have more data, false if we are done
    */
   virtual bool next(framework::Event& event) = 0;
-  
+
   /**
    * Declare a new raw data file type
    */
-  static void declare(const std::string &classname, RawDataFileBuilder* builder);
+  static void declare(const std::string& classname,
+                      RawDataFileBuilder* builder);
 };  // RawDataFile
 
 /**
@@ -83,6 +86,7 @@ class RawDataFileFactory {
  private:
   /// private constructor
   RawDataFileFactory() = default;
+
  private:
   /// The classes that can be built (and their builders)
   std::map<std::string, RawDataFileBuilder*> registered_types_;
@@ -91,7 +95,7 @@ class RawDataFileFactory {
 
 };  // RawDataFileFactory
 
-}  // namespace reformatbase
+}  // namespace reformat
 
 /**
  * @def DECLARE_RAW_DATA_FILE(NS, CLASS)
@@ -101,14 +105,14 @@ class RawDataFileFactory {
  * its name during configuration.
  */
 #define DECLARE_RAW_DATA_FILE(NS, CLASS)                                      \
-  reformatbase::RawDataFilePtr CLASS##_reformat_make(                         \
+  reformat::RawDataFilePtr CLASS##_reformat_make(                             \
       const framework::config::Parameters& ps) {                              \
     return std::make_unique<NS::CLASS>(ps);                                   \
   }                                                                           \
   __attribute__((constructor(1000))) static void CLASS##_reformat_declare() { \
-    reformatbase::RawDataFile::declare(                                       \
+    reformat::RawDataFile::declare(                                           \
         std::string(#NS) + "::" + std::string(#CLASS),                        \
         &CLASS##_reformat_make);                                              \
   }
 
-#endif  // REFORMATBASE_RAWDATAFILE_H_
+#endif  // REFORMAT_RAWDATAFILE_H_

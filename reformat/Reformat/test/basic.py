@@ -4,7 +4,7 @@ from Reformat import reformatcfg
 
 class TestFile(reformatcfg.RawDataFile) :
     def __init__(self, n) :
-        super().__init__('ReformatBase','reformatbase::test::TestFile')
+        super().__init__('Reformat','reformat::test::TestFile')
         self.num = n
 
 import argparse, sys

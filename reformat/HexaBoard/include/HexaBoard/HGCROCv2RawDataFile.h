@@ -7,7 +7,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "ReformatBase/RawDataFile.h"
+#include "Reformat/RawDataFile.h"
 
 /**
  * The HGCROC Data buffer size is fixed by the construction of the hardware.
@@ -29,13 +29,13 @@ namespace hexareformat {
  * of the hexactrl-sw being used to test the HGC ROC board
  * and its connection to a hexa-board in CMS.
  */
-class HGCROCv2RawDataFile : public reformatbase::RawDataFile {
+class HGCROCv2RawDataFile : public reformat::RawDataFile {
  public:
   /// open up boost binary archive from input file
   HGCROCv2RawDataFile(const framework::config::Parameters& ps)
       : input_stream_{ps.getParameter<std::string>("input_file")},
         input_archive_{input_stream_},
-        reformatbase::RawDataFile(ps) {}
+        reformat::RawDataFile(ps) {}
  
   /// default destructor, closes up boost archive and input stream
   ~HGCROCv2RawDataFile() = default;

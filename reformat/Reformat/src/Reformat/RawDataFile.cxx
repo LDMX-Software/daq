@@ -1,11 +1,11 @@
 
 #include <dlfcn.h>
 
-#include "ReformatBase/RawDataFile.h"
+#include "Reformat/RawDataFile.h"
 
 #include "Framework/Exception/Exception.h"
 
-namespace reformatbase {
+namespace reformat {
 
 void RawDataFile::declare(const std::string &classname, RawDataFileBuilder* builder) {
   RawDataFileFactory::getInstance().registerType(classname, builder);
@@ -50,4 +50,4 @@ RawDataFilePtr RawDataFileFactory::create(const std::string& class_name, const f
   return registration->second(params);
 }
 
-};  // reformatbase
+};  // reformat

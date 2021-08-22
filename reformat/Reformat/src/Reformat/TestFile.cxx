@@ -1,9 +1,9 @@
 
-#include "ReformatBase/RawDataFile.h"
+#include "Reformat/RawDataFile.h"
 
 #include <string>
 
-namespace reformatbase {
+namespace reformat {
 namespace test {
 
 /**
@@ -39,4 +39,4 @@ int TestFile::id_ = 1;
 }
 }
 
-DECLARE_RAW_DATA_FILE(reformatbase::test,TestFile)
+DECLARE_RAW_DATA_FILE(reformat::test,TestFile)

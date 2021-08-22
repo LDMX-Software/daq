@@ -15,7 +15,7 @@
 
 //------------//
 // ReformatBase //
-#include "ReformatBase/Converter.h"
+#include "Reformat/Converter.h"
 
 /**
  * @func usage
@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
 
   std::cout << "---- REFORMAT: Loading configuration --------" << std::endl;
 
-  reformatbase::Converter c;
+  reformat::Converter c;
   try {
     framework::ConfigurePython::root_module = "reformatcfg";
     framework::ConfigurePython::root_class  = "Converter";

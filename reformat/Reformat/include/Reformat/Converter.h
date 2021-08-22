@@ -1,10 +1,10 @@
-#ifndef REFORMATBASE_CONVERTER_H_
-#define REFORMATBASE_CONVERTER_H_
+#ifndef REFORMAT_CONVERTER_H_
+#define REFORMAT_CONVERTER_H_
 
 #include "Framework/Exception/Exception.h"
-#include "ReformatBase/RawDataFile.h"
+#include "Reformat/RawDataFile.h"
 
-namespace reformatbase {
+namespace reformat {
 
 /**
  * Class to convert the passed raw data files into a
@@ -40,6 +40,6 @@ class Converter {
 
 };  // Converter
 
-}  // namespace reformatbase
+}  // namespace reformat
 
-#endif  // REFORMATBASE_CONVERTER_H_
+#endif  // REFORMAT_CONVERTER_H_
