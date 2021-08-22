@@ -10,7 +10,7 @@ on:
     branches:
       - '**'
     tags:
-      - 'v*.*'
+      - 'context/v*.*'
 
 # workflow consists of one building and testing job
 jobs:
@@ -50,7 +50,7 @@ jobs:
           _tag=noop
           if [[ $GITHUB_REF == refs/tags/* ]]; then
             # if pushing a git tag ==> get the git tag for the docker tag
-            _tag=${GITHUB_REF#refs/tags/}
+            _tag=${GITHUB_REF#refs/tags/context/}
           elif [[ $GITHUB_REF == refs/heads/* ]]; then
             # pushing to a branch ==> docker tag is branch name
             #   if branch name is default_branch, docker tag is 'edge'
