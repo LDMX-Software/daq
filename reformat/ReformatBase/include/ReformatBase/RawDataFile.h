@@ -74,6 +74,15 @@ class RawDataFileFactory {
   RawDataFilePtr create(const std::string& class_name,
                         const framework::config::Parameters& parameters) const;
 
+  /// Delete the copy constructor
+  RawDataFileFactory(const RawDataFileFactory&) = delete;
+
+  /// Delete the assignment operator
+  void operator=(const RawDataFileFactory&) = delete;
+
+ private:
+  /// private constructor
+  RawDataFileFactory() = default;
  private:
   /// The classes that can be built (and their builders)
   std::map<std::string, RawDataFileBuilder*> registered_types_;
