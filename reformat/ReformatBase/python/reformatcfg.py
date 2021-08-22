@@ -16,7 +16,7 @@ class Converter :
         Run number to put into output EventFile
     start_event : int
         Starting event ID
-    output_file : str
+    output_filename : str
         Output EventFile path
     pass_name : str
         Pass name in output EventFile
@@ -25,12 +25,12 @@ class Converter :
     lastConverter = None
 
     def __init__(self, output_file) :
-        self.lastConverter = self
+        Converter.lastConverter = self
         self.libraries = []
         self.input_files = []
         self.run = 1
         self.start_event = 0
-        self.output_file = output_file
+        self.output_filename = output_file
         self.pass_name = 'raw'
 
     def addLibrary(lib) :
@@ -40,10 +40,10 @@ class Converter :
         Converter.lastConverter.libraries.append(lib)
 
     def addModule(m) :
-        if not m.startsWith('lib') :
+        if not m.startswith('lib') :
             m = 'lib'+m
 
-        if not m.endsWith('.so') :
+        if not m.endswith('.so') :
             m += '.so'
 
         Converter.addLibrary(m)

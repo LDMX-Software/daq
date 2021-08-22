@@ -50,6 +50,10 @@ int main(int argc, char* argv[]) {
 
   reformatbase::Converter c;
   try {
+    framework::ConfigurePython::root_module = "reformatcfg";
+    framework::ConfigurePython::root_class  = "Converter";
+    framework::ConfigurePython::root_object = "lastConverter";
+
     framework::ConfigurePython cfg(argv[ptrpy], argv + ptrpy + 1,
                                    argc - ptrpy - 1);
     c.configure(cfg.get());

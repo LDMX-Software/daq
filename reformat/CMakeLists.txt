@@ -37,6 +37,9 @@ clear_cache_variables()
 # The framework has all the backend code to write EventFiles
 add_subdirectory(Framework)
 
+# testing package
+include(CTest)
+
 # helper classes for interfacing between EventFiles and Raw data channels
 add_subdirectory(ReformatBase)
 
