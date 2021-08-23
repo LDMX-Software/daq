@@ -49,20 +49,34 @@ void Converter::convert() {
   run_header.setRunStart(std::time(nullptr));
   output_file.writeRunHeader(run_header);
 
-  bool more_events{false};
   int i_event{start_event_};
-  do {
+  while (true) {
+    auto f_it = input_files.begin();
+    if (f_it == input_files.end()) {
+      // no more events because all input files are done
+      break;
+    }
+
+    // initialize event header for input files
     ldmx::EventHeader& eh = output_event.getEventHeader();
     eh.setRun(run_);
     eh.setEventNumber(i_event++);
     eh.setTimestamp(TTimeStamp());
 
-    for (auto& f : input_files_) {
-      more_events = more_events or f->next(output_event);
+    // go through input files, removing them if
+    // they are done
+    while (f_it != input_files.end()) {
+      if (not (*f_it)->next(output_event)) {
+        // file says no more events
+        f_it = input_files.erase(f_it);
+      } else {
+        ++f_it;
+      }
     }
 
+    // go to next event in output file.
     output_file.nextEvent(true);
-  } while (more_events);
+  }
 
   run_header.setRunEnd(std::time(nullptr));
   output_file.close();
