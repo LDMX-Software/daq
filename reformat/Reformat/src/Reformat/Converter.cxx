@@ -63,7 +63,7 @@ void Converter::convert() {
     while (f_it != input_files_.end()) {
       if ((*f_it)->next(output_event)) {
         // file says no more events
-        f_it = input_files.erase(f_it);
+        f_it = input_files_.erase(f_it);
       } else {
         ++f_it;
       }
