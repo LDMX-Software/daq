@@ -18,8 +18,8 @@ set -e
 #   we will go to the mounted location that the user is running from.
 #
 #   Assumptions:
-#   - The installation location of ldmx-sw is defined in LDMX_SW_INSTALL
-#     or it is located at LDMX_BASE/ldmx-sw/install.
+#   - The installation location of daq/reformat is defined in REFORMAT_INSTALL
+#     or it is located at LDMX_BASE/daq/reformat/install
 #   - Any initialization scripts for external dependencies need to be
 #     symlinked into the directory ${__ldmx_env_script_d__}
 ###############################################################################
@@ -32,23 +32,15 @@ done
 unset init_script
 
 # add ldmx-sw and ldmx-analysis installs to the various paths
-if [ -z "${LDMX_SW_INSTALL}" ]; then
-  export LDMX_SW_INSTALL=$LDMX_BASE/ldmx-sw/install
+if [ -z "${REFORMAT_INSTALL}" ]; then
+  export REFORMAT_INSTALL=$LDMX_BASE/daq/reformat/install
 fi
-export LD_LIBRARY_PATH=$LDMX_SW_INSTALL/lib:$LD_LIBRARY_PATH
-export PYTHONPATH=$LDMX_SW_INSTALL/python:$PYTHONPATH
-export PATH=$LDMX_SW_INSTALL/bin:$PATH
-
-# add externals installed along side ldmx-sw
-# WARNING: No check to see if there is anything in this directory
-for _external_path in $LDMX_SW_INSTALL/external/*/lib
-do
-  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$_external_path
-done
-unset _external_path
+export LD_LIBRARY_PATH=$REFORMAT_INSTALL/lib:$LD_LIBRARY_PATH
+export PYTHONPATH=$REFORMAT_INSTALL/python:$PYTHONPATH
+export PATH=$REFORMAT_INSTALL/bin:$PATH
 
 # helps simplify any cmake nonsense
-export CMAKE_PREFIX_PATH=/usr/local/:$LDMX_SW_INSTALL
+export CMAKE_PREFIX_PATH=/usr/local/:$REFORMAT_INSTALL
 
 # go to first argument
 cd "$1"
