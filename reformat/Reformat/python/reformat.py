@@ -48,6 +48,49 @@ class Converter :
 
         Converter.addLibrary(m)
 
+    def __repr__(self) :
+        return f'{self.input_files} -> {self.output_filename}'
+
+    def __str__(self) :
+        msg = f'Destination: {self.output_filename}\n'
+        msg += f'  Run: {self.run}\n'
+        msg += f'  Pass Name: {self.pass_name}\n'
+        msg += f'  Start Event: {self.start_event}\n'
+        msg += 'Input Files:\n'
+        for f in self.input_files :
+            msg += f'  {f}\n'
+
+        return msg
+
+    def pause(self) :
+        """Print the converter and wait for user to press continue"""
+        print(self)
+        input('Press Enter to continue...')
+
+    def dump(self) :
+        """Debug dump of all parameters that would be loaded into C++"
+
+        The extract module mirrors the extraction procedure done in C++.
+        It is not a perfect mirroring because C++ requires some type deduction,
+        so not everything that can be dumped will be loaded into C++ without error.
+        """
+
+        def extract(obj):
+            """Extract the parameter from the input object"""
+
+            if isinstance(obj,list) :
+                return [ extract(o) for o in obj ]
+            elif hasattr(obj,'__dict__') :
+                params = dict()
+                for k in obj.__dict__ :
+                    params[k] = extract(obj.__dict__[k])
+                return params
+            else :
+                return obj
+
+        return extract(self)
+        
+
 class RawDataFile :
     """Base class for configuring other raw data files
 
@@ -62,3 +105,10 @@ class RawDataFile :
     def __init__(self, module, class_name) :
         Converter.addModule(module)
         self.class_name = class_name
+
+    def __repr__(self) :
+        return f'{self.__class__.__name__}({self.class_name})'
+
+    def __str__(self) :
+        return f'{self.__class__.__name__} {self.__dict__}'
+

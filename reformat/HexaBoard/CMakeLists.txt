@@ -4,8 +4,7 @@ project(HexaBoard)
 # Search for Boost
 find_package(
   Boost REQUIRED
-  COMPONENTS serialization
-             program_options)
+  COMPONENTS serialization)
 
 # Make a library
 setup_library(module HexaBoard 

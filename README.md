@@ -12,6 +12,7 @@ this enables any collaborator who has docker or singularity installed to contrib
 
 ### rogue
 Our [Rogue](https://slaclab.github.io/rogue/interfaces/index.html) application that is launched to collect and stream the data.
+**The Rogue application is being handled by HPS/SLAC personell.**
 
 ### reformat
 The short preparation timeline forced us to create a stop-gap measure to insure ourselves against data loss due to bugs in quickly developed software.

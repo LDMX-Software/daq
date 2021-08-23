@@ -1,8 +1,8 @@
 """HexaBoard.hgcroc Python module"""
 
-from Reformat import reformatcfg
+from Reformat import reformat
 
-class HGCROCv2RawDataFile(reformatcfg.RawDataFile) :
+class HGCROCv2RawDataFile(reformat.RawDataFile) :
     """Configuration for HGCROC v2 raw data file"""
     def __init__(self, filepath) :
         super().__init__('HexaBoard','hexareformat::HGCROCv2RawDataFile')
