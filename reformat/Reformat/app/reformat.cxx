@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
 
   reformat::Converter c;
   try {
-    framework::ConfigurePython::root_module = "reformatcfg";
+    framework::ConfigurePython::root_module = "reformat";
     framework::ConfigurePython::root_class  = "Converter";
     framework::ConfigurePython::root_object = "lastConverter";
 
