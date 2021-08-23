@@ -50,13 +50,7 @@ void Converter::convert() {
   output_file.writeRunHeader(run_header);
 
   int i_event{start_event_};
-  while (true) {
-    auto f_it = input_files_.begin();
-    if (f_it == input_files_.end()) {
-      // no more events because all input files are done
-      break;
-    }
-
+  while (not input_files_.empty()) {
     // initialize event header for input files
     ldmx::EventHeader& eh = output_event.getEventHeader();
     eh.setRun(run_);
@@ -65,6 +59,7 @@ void Converter::convert() {
 
     // go through input files, removing them if
     // they are done
+    auto f_it = input_files_.begin();
     while (f_it != input_files_.end()) {
       if ((*f_it)->next(output_event)) {
         // file says no more events
