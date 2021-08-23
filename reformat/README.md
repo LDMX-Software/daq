@@ -47,3 +47,6 @@ and the Framework EventFile.
 
 ### HexaBoard
 A band-aid solution for converting the Boost.Serialization output of hexactrl-sw.
+
+### Rogue
+Reading from a Rogue-written binary file.
