@@ -1,0 +1,43 @@
+
+name: Basic Tests
+
+on:
+  push:
+    branches: '**' #all branches
+    paths:
+      - '.github/workflows/reformat_test.yml'
+      - 'reformat/**'
+      - '!reformat/*.md'
+
+env:
+  LDMX_DOCKER_TAG: tomeichlersmith/daq-env:latest
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout 
+      uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+
+    - name: Compile and Install ldmx-sw
+      uses: |
+        source ${GITHUB_WORKSPACE}/.github/actions/common.sh
+        start_group Configure Build
+        cd reformat
+        ldmx cmake -B build -S .
+        end_group
+        start_group Build and Install
+        ldmx cmake --build build --target install
+        end_group
+      shell: bash
+
+    - name: Basic Tests for Functionality
+      run: |
+        source ${GITHUB_WORKSPACE}/.github/actions/common.sh
+        start_group ctest --verbose
+        cd reformat/build
+        ldmx ctest --verbose
+        end_group
+      shell: bash
