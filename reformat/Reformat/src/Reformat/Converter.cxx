@@ -66,7 +66,7 @@ void Converter::convert() {
     // go through input files, removing them if
     // they are done
     while (f_it != input_files.end()) {
-      if (not (*f_it)->next(output_event)) {
+      if ((*f_it)->next(output_event)) {
         // file says no more events
         f_it = input_files.erase(f_it);
       } else {

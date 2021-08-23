@@ -36,11 +36,10 @@ class RawDataFile {
   /**
    * Save the next event from this data file into the passed bus.
    *
-   * @note next will continue to be called until all raw data files
-   * return false. This means your implementation of this function needs
-   * to continue to return false after it is done processing data.
+   * @note The return value of next signals when this
+   * raw data file is all done.
    *
-   * @return true if we have more data, false if we are done
+   * @return true if we are done, false otherwise
    */
   virtual bool next(framework::Event& event) = 0;
 

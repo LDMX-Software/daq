@@ -45,7 +45,7 @@ bool HGCROCv2RawDataFile::next(framework::Event& event) {
     first_sample = false;
   }
 
-  bool more{true};
+  bool done{false};
   // loop until we change event numbers OR
   // Boost throws an archive exception signaling that
   // we have reached End of File
@@ -56,7 +56,7 @@ bool HGCROCv2RawDataFile::next(framework::Event& event) {
     } catch (boost::archive::archive_exception&) {
       // boost archive exception thrown during reading
       // assume we have reached EOF
-      more = false;
+      done = true;
       break;
     }
     if (the_sample_.event() != current_event)
@@ -68,7 +68,7 @@ bool HGCROCv2RawDataFile::next(framework::Event& event) {
   //    new event ID has been read in
   // add the buffer to the event bus
   event.add(buffer_name_,buffer);
-  return more;
+  return done;
 }
 
 void HGCROCv2RawDataFile::Sample::stream(std::ostream& out) const {
