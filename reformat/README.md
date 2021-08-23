@@ -3,10 +3,10 @@
 Reformat raw data into a Framework EventFile.
 
 This reformatting is not meant to decode any data, that is meant to be done downstream inside of ldmx-sw.
-Instead, this set of programs is meant to be a starting point for future online event building.
+Instead, this set of modules is meant to be a starting point for future online event building.
 
 ## Building
-I assume that the user is using the image built by the context defined in the [context directory](context).
+I assume that the user is using the image built by the context defined in the [context directory](./../context).
 Since this image is stored in a repository that is not one of the canonical repositories defined in the env script,
 we need to download the image manually.
 ```bash
