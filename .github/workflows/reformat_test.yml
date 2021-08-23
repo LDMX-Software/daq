@@ -1,5 +1,5 @@
 
-name: Basic Tests
+name: Basic Reformat Tests
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
         submodules: 'recursive'
 
     - name: Compile and Install ldmx-sw
-      uses: |
+      run: |
         source ${GITHUB_WORKSPACE}/.github/actions/common.sh
         start_group Configure Build
         cd reformat
