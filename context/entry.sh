@@ -40,7 +40,7 @@ export PYTHONPATH=$REFORMAT_INSTALL/python:$PYTHONPATH
 export PATH=$REFORMAT_INSTALL/bin:$PATH
 
 # helps simplify any cmake nonsense
-export CMAKE_PREFIX_PATH=/usr/local/:$REFORMAT_INSTALL
+export CMAKE_PREFIX_PATH=/usr/local/lib:$REFORMAT_INSTALL
 
 # go to first argument
 cd "$1"
