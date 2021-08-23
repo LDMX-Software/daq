@@ -51,8 +51,8 @@ void Converter::convert() {
 
   int i_event{start_event_};
   while (true) {
-    auto f_it = input_files.begin();
-    if (f_it == input_files.end()) {
+    auto f_it = input_files_.begin();
+    if (f_it == input_files_.end()) {
       // no more events because all input files are done
       break;
     }
@@ -65,7 +65,7 @@ void Converter::convert() {
 
     // go through input files, removing them if
     // they are done
-    while (f_it != input_files.end()) {
+    while (f_it != input_files_.end()) {
       if ((*f_it)->next(output_event)) {
         // file says no more events
         f_it = input_files.erase(f_it);
