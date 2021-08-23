@@ -1,4 +1,4 @@
-"""Test core functionality by running dummy test file(s)"""
+"""Basic HGCROCv2RawDataFile reformatting configuration"""
 
 from Reformat import reformat
 
