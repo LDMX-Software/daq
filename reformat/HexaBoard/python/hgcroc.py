@@ -7,3 +7,4 @@ class HGCROCv2RawDataFile(reformat.RawDataFile) :
     def __init__(self, filepath) :
         super().__init__('HexaBoard','hexareformat::HGCROCv2RawDataFile')
         self.input_file = filepath
+        self.name = 'HgcrocRawData'

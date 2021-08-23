@@ -2,7 +2,9 @@
 
 #include <algorithm>
 #include <iomanip>
-#include <boost/crc.hpp>
+
+#include "Reformat/Utility/Mask.h"
+#include "Reformat/Utility/CRC.h"
 
 /**
  * The number of readout channels is defined by the hardware
@@ -20,71 +22,11 @@
 
 namespace hexaboard {
 
-/**
- * mask_backend
- *
- * The backend struct for the mask generation scheme.
- * Since we are using a template parameter rather than
- * a function argument, these masks are generated at
- * compile-time and so are equivalent to defining a set
- * of static const varaibles.
- */
-template <short N>
-struct mask_backend {
-  /// value of mask
-  static const uint64_t value = (1ul << N) - 1ul;
-};
-
-/**
- * Generate bit masks at compile time.
- *
- * The template input defines how many of
- * the lowest bits will be masked for.
- *
- * Use like:
- *
- *  i & mask<N>
- *
- * To mask for the lowest N bits in i.
- *
- * Maximum mask is 63 bits because we are using
- * a 64-bit wide integer and so we can't do
- *  1 << 64
- * without an error being thrown during compile-time.
- *
- * @tparam N number of lowest-order bits to mask
- */
-template <short N>
-inline constexpr uint64_t mask = mask_backend<N>::value;
-
-/**
- * @struct CRC
- *
- * The HGC ROC and FPGA use a CRC checksum to double check that the
- * data transfer has been done correctly. Boost has a CRC checksum
- * library that we can use to do this checking here as well.
- *
- * Idea for this helper struct was found on StackOverflow
- * https://stackoverflow.com/a/63237679
- * I've actually simplified it by limiting its use-case to our
- * type of data.
- */
-struct CRC {
-  // the object from Boost doing the summing
-  boost::crc_32_type crc;
-  // add a word to the sum
-  void operator()(const uint32_t& w) {
-    crc.process_bytes(&w, sizeof(w));
-  }
-  // get the checksum
-  auto get() { return crc.checksum(); }
-};
+using reformat::utility::CRC;
+using reformat::utility::mask;
 
 bool HGCROCv2RawDataFile::next(framework::Event& event) {
   static bool first_sample{true};
-  static bool done{false};
-
-  if (done) return false;
 
   std::vector<uint32_t> buffer;
   int current_event{the_sample_.event()};
@@ -103,6 +45,7 @@ bool HGCROCv2RawDataFile::next(framework::Event& event) {
     first_sample = false;
   }
 
+  bool more{true};
   // loop until we change event numbers OR
   // Boost throws an archive exception signaling that
   // we have reached End of File
@@ -113,7 +56,7 @@ bool HGCROCv2RawDataFile::next(framework::Event& event) {
     } catch (boost::archive::archive_exception&) {
       // boost archive exception thrown during reading
       // assume we have reached EOF
-      done = true;
+      more = false;
       break;
     }
     if (the_sample_.event() != current_event)
@@ -125,7 +68,7 @@ bool HGCROCv2RawDataFile::next(framework::Event& event) {
   //    new event ID has been read in
   // add the buffer to the event bus
   event.add(buffer_name_,buffer);
-  return done;
+  return more;
 }
 
 void HGCROCv2RawDataFile::Sample::stream(std::ostream& out) const {
@@ -189,7 +132,8 @@ void HGCROCv2RawDataFile::Sample::put(std::vector<uint32_t>& buffer) const {
       throw std::runtime_error("Received two different BX IDs at once.");
       */
   } catch (std::out_of_range&) {
-    throw std::runtime_error("Received ROC data without a header.");
+    EXCEPTION_RAISE("BadROCData",
+      "Received ROC data without a header.");
   }
 
   /*

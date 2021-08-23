@@ -9,6 +9,7 @@ find_package(
 # Make a library
 setup_library(module HexaBoard 
               dependencies Reformat::Reformat
+                           Reformat::Utility
                            Boost::serialization)
 
 setup_python(package_name Reformat)

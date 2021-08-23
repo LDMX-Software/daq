@@ -1,11 +1,11 @@
 # Set the project name
 project(Reformat)
 
-find_package(Boost REQUIRED COMPONENTS python)
+# interface utility target (only headers)
+setup_library(module Reformat name Utility interface)
 
 setup_library(module Reformat
-              dependencies Framework::Framework
-                           Boost::python)
+              dependencies Framework::Framework)
 
 setup_python(package_name Reformat)
 
