@@ -27,6 +27,12 @@ ldmx cmake ..
 ldmx make install
 ```
 
+## Usage
+This code-base is designed very similarly to the core Framework.
+The `reformat` program is configured using a python script at run-time,
+and the different input files can be dynamically loaded.
+On-going notes and documentation can be seen in the [usage](reformat/usage.md) document.
+
 ## Table of Contents
 
 ### Framework
@@ -35,9 +41,9 @@ The Framework module from ldmx-sw.
 ### cmake
 Common cmake macros used in LDMX-Software.
 
-### ReformatBase
+### Reformat
 This is the module that is the main interface between different serialization schemes (Rogue, Boost.Serialization,...)
 and the Framework EventFile.
 
-### hexaboard
+### HexaBoard
 A band-aid solution for converting the Boost.Serialization output of hexactrl-sw.
