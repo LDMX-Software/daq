@@ -9,6 +9,9 @@ This repository is focused on the software tools necessary to collect data comin
 <a href="https://github.com/LDMX-Software/daq/actions/workflows/build_context.yml" alt="Actions">
     <img src="https://github.com/LDMX-Software/daq/actions/workflows/build_context.yml/badge.svg" />
 </a>
+<a href="https://hub.docker.com/repository/docker/tomeichlersmith/daq-env" alt="DockerHub">
+    <img src="https://img.shields.io/docker/v/tomeichlersmith/daq-env/latest" />
+</a>
 
 This is the docker build context for a development environment container.
 It is not assumed that the actual DAQ will be done from within a container; however,
