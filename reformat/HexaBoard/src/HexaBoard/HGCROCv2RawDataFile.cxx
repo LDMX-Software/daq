@@ -3,8 +3,8 @@
 #include <algorithm>
 #include <iomanip>
 
-#include "Reformat/Utility/Mask.h"
 #include "Reformat/Utility/CRC.h"
+#include "Reformat/Utility/Mask.h"
 
 /**
  * The number of readout channels is defined by the hardware
@@ -20,10 +20,11 @@
  */
 #define N_READOUT_CHANNELS 40
 
+namespace reformat {
 namespace hexaboard {
 
-using reformat::utility::CRC;
-using reformat::utility::mask;
+using utility::CRC;
+using utility::mask;
 
 bool HGCROCv2RawDataFile::next(framework::Event& event) {
   static bool first_sample{true};
@@ -32,14 +33,15 @@ bool HGCROCv2RawDataFile::next(framework::Event& event) {
   int current_event{the_sample_.event()};
 
   if (first_sample) {
-    // on the very first sample in the run, 
+    // on the very first sample in the run,
     // we need to get the current event from the archive
     try {
       input_archive_ >> the_sample_;
     } catch (boost::archive::archive_exception& e) {
-      EXCEPTION_RAISE("BadInput",
-          std::string("Boost.Arhcive exception reached on first sample. ")
-          + e.what());
+      EXCEPTION_RAISE(
+          "BadInput",
+          std::string("Boost.Arhcive exception reached on first sample. ") +
+              e.what());
     }
     current_event = the_sample_.event();
     first_sample = false;
@@ -59,15 +61,14 @@ bool HGCROCv2RawDataFile::next(framework::Event& event) {
       done = true;
       break;
     }
-    if (the_sample_.event() != current_event)
-      break;
+    if (the_sample_.event() != current_event) break;
   }
 
   // broken out of loop when done because either
   //    reached EOF of archive OR
   //    new event ID has been read in
   // add the buffer to the event bus
-  event.add(buffer_name_,buffer);
+  event.add(buffer_name_, buffer);
   return done;
 }
 
@@ -107,15 +108,14 @@ void HGCROCv2RawDataFile::Sample::put(std::vector<uint32_t>& buffer) const {
    * We need to do some fancy footwork to extract the BX ID from the
    * ROC data because it is not decoded in hexactrl-sw by default.
    */
-  word =
-      ((1 & mask<4>) << 8 + 6 + 1 + 12) +  // 4 bit version number
-      (
-          (fpga & mask<8>)
-          << 6 + 1 + 12) +  // 8 bit FPGA ID # (arbitrarily set to 9 here)
-      ((2 & mask<6>) << 1 + 12) +  // 6 bit number of links ("halves" of ROC)
-      ((0 & mask<1>) << 1) +       // Reserved 0 bit
-      ((2 * N_READOUT_CHANNELS & mask<12>)
-       << 0);  // 12 bit total number of readout channels
+  word = ((1 & mask<4>) << 8 + 6 + 1 + 12) +  // 4 bit version number
+         (
+             (fpga & mask<8>)
+             << 6 + 1 + 12) +  // 8 bit FPGA ID # (arbitrarily set to 9 here)
+         ((2 & mask<6>) << 1 + 12) +  // 6 bit number of links ("halves" of ROC)
+         ((0 & mask<1>) << 1) +       // Reserved 0 bit
+         ((2 * N_READOUT_CHANNELS & mask<12>)
+          << 0);  // 12 bit total number of readout channels
   buffer.push_back(word);
   fpga_crc(word);
 
@@ -132,8 +132,7 @@ void HGCROCv2RawDataFile::Sample::put(std::vector<uint32_t>& buffer) const {
       throw std::runtime_error("Received two different BX IDs at once.");
       */
   } catch (std::out_of_range&) {
-    EXCEPTION_RAISE("BadROCData",
-      "Received ROC data without a header.");
+    EXCEPTION_RAISE("BadROCData", "Received ROC data without a header.");
   }
 
   /*
@@ -181,14 +180,14 @@ void HGCROCv2RawDataFile::Sample::put(std::vector<uint32_t>& buffer) const {
    *
    * The numbers in parentheses are the number of bits.
    */
-  for (const auto& link_data : { m_data0, m_data1 } ) {
+  for (const auto& link_data : {m_data0, m_data1}) {
     CRC link_crc;
     word = ((roc & mask<16>)
             << 8 + 5 + 1) +  // 16 bits for ROC ID ((arbitrary choice of 7)
            ((1 & mask<1>) << 8 + 5) +  // CRC OK bit
            ((0 & mask<5>) << 8) +      // 5 bits of zero reserved
            (mask<8>);  // last 8 bits of readout map (everything is being
-                          // read out)
+                       // read out)
     buffer.push_back(word);
     fpga_crc(word);
     link_crc(word);
@@ -199,13 +198,13 @@ void HGCROCv2RawDataFile::Sample::put(std::vector<uint32_t>& buffer) const {
     /** header word from ROC
      * 0101 | BX ID (12) | RREQ (6) | OR (3) | HE (3) | 0101
      */
-    word = ((0b0101) << 4 + 3 + 3 + 6 + 12) +          // 4 bits 0101
-           ((bx_id & mask<12>) << 4 + 3 + 3 + 6) +  // 12 bits for BX ID
-           ((m_event & mask<6>) << 4 + 3 + 3) +  // 6 bits for RREQ (event)
-           ((orbit & mask<3>)
-            << 4 + 3) +               // lower 3 bits of orbit (bunch train)
-           ((0 & mask<3>) << 4) +  // any Hamming errors present?
-           (0b0101);                  // 4 bits 0101
+    word =
+        ((0b0101) << 4 + 3 + 3 + 6 + 12) +       // 4 bits 0101
+        ((bx_id & mask<12>) << 4 + 3 + 3 + 6) +  // 12 bits for BX ID
+        ((m_event & mask<6>) << 4 + 3 + 3) +     // 6 bits for RREQ (event)
+        ((orbit & mask<3>) << 4 + 3) +  // lower 3 bits of orbit (bunch train)
+        ((0 & mask<3>) << 4) +          // any Hamming errors present?
+        (0b0101);                       // 4 bits 0101
     buffer.push_back(word);
     fpga_crc(word);
     link_crc(word);
@@ -214,7 +213,8 @@ void HGCROCv2RawDataFile::Sample::put(std::vector<uint32_t>& buffer) const {
     //  (we already decoded the header to get the BX ID above)
     //  and we drop the four commas that are used by the ROC
     //  to signal the end of a group
-    for (auto w_it{link_data.begin()+1}; w_it != link_data.end()-4; w_it++) {
+    for (auto w_it{link_data.begin() + 1}; w_it != link_data.end() - 4;
+         w_it++) {
       buffer.push_back(*w_it);
       fpga_crc(*w_it);
       link_crc(*w_it);
@@ -230,5 +230,6 @@ void HGCROCv2RawDataFile::Sample::put(std::vector<uint32_t>& buffer) const {
 }
 
 }  // namespace hexaboard
+}  // namespace reformat
 
-DECLARE_RAW_DATA_FILE(hexaboard, HGCROCv2RawDataFile)
+DECLARE_RAW_DATA_FILE(reformat::hexaboard, HGCROCv2RawDataFile)

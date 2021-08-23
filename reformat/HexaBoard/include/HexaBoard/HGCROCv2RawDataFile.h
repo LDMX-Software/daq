@@ -9,6 +9,8 @@
 
 #include "Reformat/RawDataFile.h"
 
+namespace reformat {
+
 /**
  * @namespace hexaboard
  *
@@ -33,7 +35,7 @@ class HGCROCv2RawDataFile : public reformat::RawDataFile {
         reformat::RawDataFile(ps) {
     buffer_name_ = ps.getParameter<std::string>("name");
   }
- 
+
   /// default destructor, closes up boost archive and input stream
   ~HGCROCv2RawDataFile() = default;
 
@@ -47,7 +49,7 @@ class HGCROCv2RawDataFile : public reformat::RawDataFile {
   boost::archive::binary_iarchive input_archive_;
   /// the name of the output event object
   std::string buffer_name_;
- 
+
  private:
   /**
    * This class is copied almost exactly from
@@ -112,5 +114,6 @@ class HGCROCv2RawDataFile : public reformat::RawDataFile {
 };  // HGCROCv2RawDataFile
 
 }  // namespace hexaboard
+}  // namespace reformat
 
 #endif
