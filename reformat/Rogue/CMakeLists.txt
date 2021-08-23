@@ -1,3 +1,4 @@
 
-find_package(Rogue REQUIRED)
+# get Rogue::Interface target setup
+setup_rogue_target()
 
