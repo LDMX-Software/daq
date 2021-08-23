@@ -1,5 +1,5 @@
-#ifndef PACKING_HEXAREFORMAT_HGCROCV2RAWDATAFILE
-#define PACKING_HEXAREFORMAT_HGCROCV2RAWDATAFILE
+#ifndef HEXABOARD_HGCROCV2RAWDATAFILE
+#define HEXABOARD_HGCROCV2RAWDATAFILE
 
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/serialization/vector.hpp>
@@ -10,19 +10,14 @@
 #include "Reformat/RawDataFile.h"
 
 /**
- * The HGCROC Data buffer size is fixed by the construction of the hardware.
- * 36 channels + 2 common mode gathered together + 1 calib + 1 header
- *  + 4 iddles in trailer per half
- */
-#define HGCROC_DATA_BUF_SIZE 43
-
-/**
- * @namespace hexareformat
+ * @namespace hexaboard
  *
- * Helper classes for interfacing with raw data.
- * The code in this namespace is not expected to be around long.
+ * Interfacing with hexactrl-sw that is being used by CMS
+ * in hexaboard test-stands. The "hexaboards" in CMS are being
+ * used as the ECal modules in LDMX, so we have adopted use of
+ * this hexactrl-sw for LDMX test stands.
  */
-namespace hexareformat {
+namespace hexaboard {
 
 /**
  * This raw data file wraps the Boost.Serialization output
@@ -35,7 +30,9 @@ class HGCROCv2RawDataFile : public reformat::RawDataFile {
   HGCROCv2RawDataFile(const framework::config::Parameters& ps)
       : input_stream_{ps.getParameter<std::string>("input_file")},
         input_archive_{input_stream_},
-        reformat::RawDataFile(ps) {}
+        reformat::RawDataFile(ps) {
+    buffer_name_ = ps.getParameter<std::string>("name");
+  }
  
   /// default destructor, closes up boost archive and input stream
   ~HGCROCv2RawDataFile() = default;
@@ -48,6 +45,10 @@ class HGCROCv2RawDataFile : public reformat::RawDataFile {
   std::ifstream input_stream_;
   /// the archive we are reading in
   boost::archive::binary_iarchive input_archive_;
+  /// the name of the output event object
+  std::string buffer_name_;
+ 
+ private:
   /**
    * This class is copied almost exactly from
    * the hexactrl-sw borrowed from CMS. I have deleted the parts
@@ -59,15 +60,20 @@ class HGCROCv2RawDataFile : public reformat::RawDataFile {
    */
   class Sample {
    public:
-    Sample() {}
-
+    /// get the current event number
     int event() const { return m_event; }
 
+    /// get the chip id number
     int chip() const { return m_chip; }
 
-    const std::vector<uint32_t>& data(int chiphalf) const {
-      return chiphalf == 0 ? m_data0 : m_data1;
-    }
+    /**
+     * Put this sample into the passed buffer
+     *
+     * This is where we actually do the encoding.
+     * We add the necessary headers and perform the CRC
+     * checksums that are projected to be used.
+     */
+    void put(std::vector<uint32_t>& buffer) const;
 
     /**
      * Stream the sample class to an output stream
@@ -84,6 +90,9 @@ class HGCROCv2RawDataFile : public reformat::RawDataFile {
     }
 
    private:
+    /**
+     * The serialization function that is used by Boost to do I/O
+     */
     friend class boost::serialization::access;
     template <class Archive>
     void serialize(Archive& ar, const unsigned int version) {
@@ -102,6 +111,6 @@ class HGCROCv2RawDataFile : public reformat::RawDataFile {
 
 };  // HGCROCv2RawDataFile
 
-}  // namespace hexareformat
+}  // namespace hexaboard
 
 #endif
