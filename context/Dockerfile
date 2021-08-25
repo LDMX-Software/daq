@@ -41,6 +41,7 @@ RUN apt-get update &&\
         python3-pip \
         python3-numpy \
         python3-tk \
+        python3-pyqt5.qtsvg \
         srm-ifce-dev \
         wget \
     && rm -rf /var/lib/apt/lists/* &&\
