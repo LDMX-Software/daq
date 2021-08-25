@@ -18,8 +18,10 @@ This repository is focused on the software tools necessary to collect data comin
 </a>
 
 This is the docker build context for a development environment container.
-It is not assumed that the actual DAQ will be done from within a container; however,
+**It is not assumed that the actual DAQ will be done from within a container**; however,
 this enables any collaborator who has docker or singularity installed to contribute.
+
+This also is a very direct way of documenting how the dependencies are installed on a new system.
 
 ### rogue
 Our [Rogue](https://slaclab.github.io/rogue/interfaces/index.html) application that is launched to collect and stream the data.
