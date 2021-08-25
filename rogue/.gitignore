@@ -4,3 +4,9 @@
 # rogue-generated files
 *addr_map.csv
 *addr_map.h
+
+# building directories
+**build**
+
+# c++ library files
+*.so
