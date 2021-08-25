@@ -1,10 +1,9 @@
 
-FROM tidair/rogue:v5.9.3
-LABEL rogue.version="v5.9.3"
+FROM ubuntu:20.04
+LABEL ubuntu.version="20.04"
 MAINTAINER Tom Eichlersmith <eichl008@umn.edu>
 
 # First install any required dependencies from ubuntu repos
-# Ongoing documentation for this list is in docs/ubuntu-packages.md
 RUN apt-get update &&\
     DEBIAN_FRONTEND=noninteractive \
     apt-get install -y \
@@ -13,6 +12,7 @@ RUN apt-get update &&\
         fonts-freefont-ttf \
         g++-7 \
         gcc-7 \
+        libbz2-dev \
         libfftw3-dev \
         libfreetype6-dev \
         libftgl-dev \
@@ -26,6 +26,7 @@ RUN apt-get update &&\
         liblzma-dev \
         libpcre++-dev \
         libpng-dev \
+        libreadline6-dev \
         libssl-dev \
         libx11-dev \
         libxext-dev \  
@@ -34,6 +35,7 @@ RUN apt-get update &&\
         libxmu-dev \
         libxpm-dev \
         libz-dev \
+        libzmq3-dev \
         libzstd-dev \
         locales \
         make \
@@ -41,7 +43,7 @@ RUN apt-get update &&\
         python3-pip \
         python3-numpy \
         python3-tk \
-        python3-pyqt5.qtsvg \
+        python3-pyqt5 \
         srm-ifce-dev \
         wget \
     && rm -rf /var/lib/apt/lists/* &&\
@@ -63,7 +65,12 @@ ENV __prefix /usr/local
 ENV __ldmx_env_script_d__ /etc/ldmx-container-env.d
 RUN mkdir ${__ldmx_env_script_d__}
 
-WORKDIR /ldmx
+#run environment setup when docker container is launched and decide what to do from there
+#   will require the environment variable LDMX_BASE defined
+COPY ./entry.sh /etc/
+RUN chmod 755 /etc/entry.sh
+ENTRYPOINT ["/etc/entry.sh"]
+
 ###############################################################################
 # Boost
 ###############################################################################
@@ -99,13 +106,63 @@ RUN mkdir src &&\
     ln -s /usr/local/bin/thisroot.sh ${__ldmx_env_script_d__}/thisroot.sh &&\
     rm -rf build src
 
-#run environment setup when docker container is launched and decide what to do from there
-#   will require the environment variable LDMX_BASE defined
-COPY ./entry.sh /etc/
-RUN chmod 755 /etc/entry.sh
-ENTRYPOINT ["/etc/entry.sh"]
+###############################################################################
+# EPICS 
+#   - setup_rogue.sh requires the EPICS_BASE env variable defined
+###############################################################################
+LABEL epics.version="v7.0.3"
+RUN mkdir src &&\
+    ${__wget} https://github.com/epics-base/epics-base/archive/R7.0.3.tar.gz |\
+      ${__untar} &&\
+    cd src &&\
+    make INSTALL_LOCATION=${__prefix} &&\
+    rm -rf src
+ENV EPICS_BASE ${__prefix}
+
+###############################################################################
+# PCAS
+#   - setup_rogue.sh requires the EPICS_PCAS_ROOT env variable defined
+###############################################################################
+LABEL pcas.version="v4.13.2"
+RUN mkdir src &&\
+    ${__wget} https://github.com/epics-modules/pcas/archive/v4.13.2.tar.gz |\
+      ${__untar} &&\
+    make INSTALL_LOCATION=$EPICS_BASE/pcas EPICS_BASE=$EPICS_BASE &&\
+    rm -rf src
+ENV EPICS_PCAS_ROOT $EPICS_BASE/pcas
+
+###############################################################################
+# Rogue Helper Python Packages
+###############################################################################
+RUN python3 -m pip install --no-cache-dir \ 
+      PyYAML \
+      Pyro4 \
+      parse \
+      click \
+      ipython \
+      pyzmq \
+      packaging \
+      matplotlib \
+      numpy \
+      pyepics \
+      p4p \
+      pydm \
+      jsonpickle \
+      sqlalchemy \
+      pyserial
 
 ###############################################################################
 # Rogue
 ###############################################################################
+LABEL rogue.version="v5.9.3"
+RUN mkdir src &&\
+    ${__wget} https://github.com/slaclab/rogue/archive/refs/tags/v5.9.3.tar.gz |\
+      ${__untar} &&\
+    cmake \
+      -B src/build \
+      -S src \
+      -DROGUE_INSTALL=system \
+      -DCMAKE_INSTALL_PREFIX=${__prefix} &&\
+    cmake --build src/build --target install &&\
+    rm -r src
 COPY ./rogue-env.sh ${__ldmx_env_script_d__}/

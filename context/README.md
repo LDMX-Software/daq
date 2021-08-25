@@ -5,6 +5,10 @@ While we aren't planning to actually use containers for our DAQ path,
 having a container with the necessary software tools will help distribute
 the environment to developers in the collaboration.
 
+This docker file will also be a helpful guide to getting started on a new computer
+because it lists all of the mandatory requirements for building and running these
+software tools.
+
 ## Image
 
 The image is built off of the [Rogue docker image](https://hub.docker.com/r/tidair/rogue).
