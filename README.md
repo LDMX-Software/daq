@@ -3,6 +3,10 @@
 
 This repository is focused on the software tools necessary to collect data coming off of the LDMX detector.
 
+<a href="http://perso.crans.org/besson/LICENSE.html" alt="GPLv3 license">
+    <img src="https://img.shields.io/badge/License-GPLv3-blue.svg" />
+</a>
+
 ## Table of Contents
 
 ### context
