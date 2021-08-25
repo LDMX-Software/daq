@@ -1,0 +1,6 @@
+# python files
+*.pyc
+
+# rogue-generated files
+*addr_map.csv
+*addr_map.h
