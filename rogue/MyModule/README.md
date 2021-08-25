@@ -16,3 +16,11 @@ The basic idea of a custom Rogue module is two-tiered.
     underlying classes without leading to conflicts.
   - This is roughly similar to how the `pyrogue` python module is built
 
+## Next Steps
+- Install MyModule into an arbitrary location.
+  - This would be helpful for identifying a location to point the PYTHONPATH
+    to from within the container.
+- Boost.Serialization source
+  - Translate a Boost.Serialization raw data file into a Rogue data file.
+  - These types of raw data files are available to me at UMN and offer
+    an example of "real" data housed within a Rogue file
