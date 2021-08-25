@@ -52,7 +52,7 @@ class MyCustomSlave : public rogue::interfaces::stream::Slave {
     boost::python::class_<
         MyCustomSlave, std::shared_ptr<MyCustomSlave>,
         boost::python::bases<rogue::interfaces::stream::Slave>,
-        boost::noncopyable>("MyCustomSlave", boost::python::init<>())
+        boost::noncopyable>("MyCustomSlave")
         .def("getFrameCount", &MyCustomSlave::getFrameCount)
         .def("getTotalBytes", &MyCustomSlave::getTotalBytes);
     boost::python::implicitly_convertible<
@@ -131,7 +131,7 @@ class MyCustomMaster : public rogue::interfaces::stream::Master {
     boost::python::class_<
         MyCustomMaster, std::shared_ptr<MyCustomMaster>,
         boost::python::bases<rogue::interfaces::stream::Master>,
-        boost::noncopyable>("MyCustomMaster", boost::python::init<>())
+        boost::noncopyable>("MyCustomMaster")
         .def("getFrameCount", &MyCustomMaster::getFrameCount)
         .def("getTotalBytes", &MyCustomMaster::getTotalBytes)
         .def("setFrameSize", &MyCustomMaster::setFrameSize)

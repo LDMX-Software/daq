@@ -1,20 +1,20 @@
 
 import pyrogue
-import MyModule
+import MyWrapper
 
 class TestRoot(pyrogue.Root):
     def __init__(self):
         super().__init__(name="MyRoot")
 
         # Add master and slave devices
-        self.add(MyModule.MyCustomMaster(name="testMaster"))
-        self.add(MyModule.MyCustomSlave(name="testSlave"))
+        self.add(MyWrapper.MyCustomMaster(name="testMaster"))
+        self.add(MyWrapper.MyCustomSlave(name="testSlave"))
 
         # Connect master to slave
         self.testMaster >> self.testSlave
 
         # Start the tree
-        self.start()
+        #self.start()
 
 
 with TestRoot() as r:
