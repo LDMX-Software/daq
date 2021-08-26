@@ -152,6 +152,7 @@ RUN mkdir src &&\
       -B src/build \
       -S src \
       -DROGUE_INSTALL=system \
+      -DROGUE_VERSION=v5.9.3 \
       -DCMAKE_INSTALL_PREFIX=${__prefix} &&\
     cmake --build src/build --target install &&\
     rm -r src
