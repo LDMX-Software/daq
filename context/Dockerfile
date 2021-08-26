@@ -116,7 +116,7 @@ RUN mkdir src &&\
       ${__untar} &&\
     cd src &&\
     make INSTALL_LOCATION=${__prefix} &&\
-    rm -rf src
+    cd .. && rm -rf src
 ENV EPICS_BASE ${__prefix}
 
 ###############################################################################
@@ -127,8 +127,9 @@ LABEL pcas.version="v4.13.2"
 RUN mkdir src &&\
     ${__wget} https://github.com/epics-modules/pcas/archive/v4.13.2.tar.gz |\
       ${__untar} &&\
+    cd src &&\
     make INSTALL_LOCATION=$EPICS_BASE/pcas EPICS_BASE=$EPICS_BASE &&\
-    rm -rf src
+    cd .. && rm -rf src
 ENV EPICS_PCAS_ROOT $EPICS_BASE/pcas
 
 ###############################################################################
