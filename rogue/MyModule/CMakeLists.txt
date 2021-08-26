@@ -38,8 +38,16 @@ include_directories(${ROGUE_INCLUDE_DIRS})
 add_library(MyModule SHARED MyModule.cpp)
 
 # Set output to TOP/lib, remove lib prefix
-set_target_properties(MyModule PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/python)
+#   this allows 'import MyModule' to work instead of 
+#   having to do 'import libMyModule'
 set_target_properties(MyModule PROPERTIES PREFIX "")
 
 # Link to rogue core
 target_link_libraries(MyModule PUBLIC ${ROGUE_LIBRARIES})
+
+# install python-bound library to python directory
+install(TARGETS MyModule
+        LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/python)
+# install python wrappers along side python-bound lib
+install(DIRECTORY python
+        DESTINATION ${CMAKE_INSTALL_PREFIX})
