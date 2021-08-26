@@ -9,9 +9,11 @@ RUN apt-get update &&\
     apt-get install -y \
         binutils \
         ca-certificates \
+        cmake \
         fonts-freefont-ttf \
         g++-7 \
         gcc-7 \
+        libboost-all-dev \
         libbz2-dev \
         libfftw3-dev \
         libfreetype6-dev \
@@ -48,8 +50,7 @@ RUN apt-get update &&\
         wget \
     && rm -rf /var/lib/apt/lists/* &&\
     apt-get autoremove --purge &&\
-    apt-get clean all &&\
-    python3 -m pip install --upgrade --no-cache-dir cmake
+    apt-get clean all
 
 ###############################################################################
 # Source-Code Downloading Method
@@ -70,18 +71,6 @@ RUN mkdir ${__ldmx_env_script_d__}
 COPY ./entry.sh /etc/
 RUN chmod 755 /etc/entry.sh
 ENTRYPOINT ["/etc/entry.sh"]
-
-###############################################################################
-# Boost
-###############################################################################
-LABEL boost.version="1.76.0"
-RUN mkdir src &&\
-    ${__wget} https://boostorg.jfrog.io/artifactory/main/release/1.76.0/source/boost_1_76_0.tar.gz |\
-      ${__untar} &&\
-    cd src &&\
-    ./bootstrap.sh &&\
-    ./b2 install &&\
-    cd .. && rm -rf src
 
 ###############################################################################
 # CERN's ROOT
