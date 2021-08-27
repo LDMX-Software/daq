@@ -144,17 +144,17 @@ RUN python3 -m pip install --no-cache-dir \
 ###############################################################################
 # Rogue
 ###############################################################################
-LABEL rogue.version="v5.9.3"
-ENV LD_LIBRARY_PATH /usr/local/lib:/usr/local/pcas/lib
-RUN mkdir src &&\
-    ${__wget} https://github.com/slaclab/rogue/archive/refs/tags/v5.9.3.tar.gz |\
-      ${__untar} &&\
-    cmake \
-      -B src/build \
-      -S src \
-      -DROGUE_INSTALL=system \
-      -DROGUE_VERSION=v5.9.3 \
-      -DCMAKE_INSTALL_PREFIX=${__prefix} &&\
-    cmake --build src/build --target install &&\
-    rm -r src
-COPY ./rogue-env.sh ${__ldmx_env_script_d__}/
+#LABEL rogue.version="v5.9.3"
+#ENV LD_LIBRARY_PATH /usr/local/lib:/usr/local/pcas/lib
+#RUN mkdir src &&\
+#    ${__wget} https://github.com/slaclab/rogue/archive/refs/tags/v5.9.3.tar.gz |\
+#      ${__untar} &&\
+#    cmake \
+#      -B src/build \
+#      -S src \
+#      -DROGUE_INSTALL=system \
+#      -DROGUE_VERSION=v5.9.3 \
+#      -DCMAKE_INSTALL_PREFIX=${__prefix} &&\
+#    cmake --build src/build --target install &&\
+#    rm -r src
+#COPY ./rogue-env.sh ${__ldmx_env_script_d__}/
