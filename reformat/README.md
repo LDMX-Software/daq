@@ -6,17 +6,8 @@ This reformatting is not meant to decode any data, that is meant to be done down
 Instead, this set of modules is meant to be a starting point for future online event building.
 
 ## Building
-I assume that the user is using the image built by the context defined in the [context directory](./../context).
-Since this image is stored in a repository that is not one of the canonical repositories defined in the env script,
-we need to download the image manually.
-```bash
-docker pull tomeichlersmith/daq-env:latest
-docker tag tomeichlersmith/daq-env:latest ldmx/local:daq-env
-```
-Then you can start using the environment commands.
-```bash
-ldmx use local daq-env
-```
+The requirements of the software (currently) in this directory is ROOT, C++17, and Boost - 
+all three of which are in the canonical "dev" containers that ldmx-sw is built with.
 
 Building this software is similar to ldmx-sw.
 ```bash
@@ -47,6 +38,3 @@ and the Framework EventFile.
 
 ### HexaBoard
 A band-aid solution for converting the Boost.Serialization output of hexactrl-sw.
-
-### Rogue
-Reading from a Rogue-written binary file.
