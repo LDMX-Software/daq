@@ -45,6 +45,3 @@ add_subdirectory(Reformat)
 
 # specific hexactrl-sw translator
 add_subdirectory(HexaBoard)
-
-# reading from a Rogue-written binary file
-add_subdirectory(Rogue)
