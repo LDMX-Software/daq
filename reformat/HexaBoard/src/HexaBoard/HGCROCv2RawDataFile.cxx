@@ -108,14 +108,11 @@ void HGCROCv2RawDataFile::Sample::put(std::vector<uint32_t>& buffer) const {
    * We need to do some fancy footwork to extract the BX ID from the
    * ROC data because it is not decoded in hexactrl-sw by default.
    */
-  word = ((1 & mask<4>) << 8 + 6 + 1 + 12) +  // 4 bit version number
-         (
-             (fpga & mask<8>)
-             << 6 + 1 + 12) +  // 8 bit FPGA ID # (arbitrarily set to 9 here)
-         ((2 & mask<6>) << 1 + 12) +  // 6 bit number of links ("halves" of ROC)
-         ((0 & mask<1>) << 1) +       // Reserved 0 bit
-         ((2 * N_READOUT_CHANNELS & mask<12>)
-          << 0);  // 12 bit total number of readout channels
+  word = (1 & mask<4>) + // 4 bit version number
+         ((fpga & mask<8>) << 4) +
+         ((2 & mask<6>) << 12) +
+         (0 << 18) +
+         ((2 * N_READOUT_CHANNELS & mask<12>) << 19);
   buffer.push_back(word);
   fpga_crc(word);
 
@@ -140,32 +137,28 @@ void HGCROCv2RawDataFile::Sample::put(std::vector<uint32_t>& buffer) const {
     throw std::runtime_error("Unable to deduce BX ID.");
     */
 
-  word =
-      ((bx_id & mask<12>) << 10 + 10) +  // 12 bit bunch ID number
-      ((m_event & mask<10>)
-       << 10) +  // 10 bit read request ID number (what will be an event number)
-      ((orbit & mask<10>) << 0);  // 10 bit bunch train/orbit counter
+  word = (bx_id & mask<12>) +
+         ((m_event & mask<10>) << 12) +
+         ((orbit & mask<10>) << 22);
   buffer.push_back(word);
   fpga_crc(word);
 
   /** Insert link counters
    * We only have two links in this ROC,
-   * so the first half of this word will be zeroes.
+   * so the last half of this word will be zeroes.
    *
    * And then, we aren't doing any zero-suppression,
    * so the number of channels readout will always
    * be the same for both links.
    * The numbers in parentheses are the number of bits.
    *
-   * sixteen zeros
+   * RID ok (1) | CRC ok (1) | LEN0 (6)
    *  | RID ok (1) | CRC ok (1) | LEN1 (6)
-   *  | RID ok (1) | CRC ok (1) | LEN0 (6)
+   *  | sixteen zeros
    */
-  word = ((0 & mask<16>) << 16) + ((1 & mask<1>) << 6 + 1 + 1 + 6 + 1) +
-         ((1 & mask<1>) << 6 + 1 + 1 + 6) +
-         ((N_READOUT_CHANNELS & mask<6>) << 6 + 1 + 1) +
-         ((1 & mask<1>) << 6 + 1) + ((1 & mask<1>) << 6) +
-         ((N_READOUT_CHANNELS & mask<6>) << 0);
+  word = (1     ) + (1 << 2) + ((N_READOUT_CHANNELS & mask<6>) << 2) +
+         (1 << 8) + (1 << 9) + ((N_READOUT_CHANNELS & mask<6>) << 10) +
+         (0 << 16); // zero-pad the word when done with links
   buffer.push_back(word);
   fpga_crc(word);
 
@@ -182,12 +175,10 @@ void HGCROCv2RawDataFile::Sample::put(std::vector<uint32_t>& buffer) const {
    */
   for (const auto& link_data : {m_data0, m_data1}) {
     CRC link_crc;
-    word = ((roc & mask<16>)
-            << 8 + 5 + 1) +  // 16 bits for ROC ID ((arbitrary choice of 7)
-           ((1 & mask<1>) << 8 + 5) +  // CRC OK bit
-           ((0 & mask<5>) << 8) +      // 5 bits of zero reserved
-           (mask<8>);  // last 8 bits of readout map (everything is being
-                       // read out)
+    word = (roc & mask<16>) +
+           (1 << 16) +
+           (0 << 17) +
+           (mask<8> << 22);
     buffer.push_back(word);
     fpga_crc(word);
     link_crc(word);
@@ -199,12 +190,12 @@ void HGCROCv2RawDataFile::Sample::put(std::vector<uint32_t>& buffer) const {
      * 0101 | BX ID (12) | RREQ (6) | OR (3) | HE (3) | 0101
      */
     word =
-        ((0b0101) << 4 + 3 + 3 + 6 + 12) +       // 4 bits 0101
-        ((bx_id & mask<12>) << 4 + 3 + 3 + 6) +  // 12 bits for BX ID
-        ((m_event & mask<6>) << 4 + 3 + 3) +     // 6 bits for RREQ (event)
-        ((orbit & mask<3>) << 4 + 3) +  // lower 3 bits of orbit (bunch train)
-        ((0 & mask<3>) << 4) +          // any Hamming errors present?
-        (0b0101);                       // 4 bits 0101
+        (0b0101) +
+        ((bx_id & mask<12>) << 4) +
+        ((m_event & mask<6>) << 16) +
+        ((orbit & mask<3>) << 22) +
+        ((0 & mask<3>) << 25) +
+        (0b0101 << 28);
     buffer.push_back(word);
     fpga_crc(word);
     link_crc(word);

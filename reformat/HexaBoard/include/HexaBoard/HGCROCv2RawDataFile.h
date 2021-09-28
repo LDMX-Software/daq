@@ -17,7 +17,7 @@ namespace reformat {
  * Interfacing with hexactrl-sw that is being used by CMS
  * in hexaboard test-stands. The "hexaboards" in CMS are being
  * used as the ECal modules in LDMX, so we have adopted use of
- * this hexactrl-sw for LDMX test stands.
+ * this hexactrl-sw for LDMX test stands with HGC ROCs.
  */
 namespace hexaboard {
 
