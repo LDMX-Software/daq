@@ -23,9 +23,10 @@ this enables any collaborator who has docker or singularity installed to contrib
 
 This also is a very direct way of documenting how the dependencies are installed on a new system.
 
-### rogue
-Our [Rogue](https://slaclab.github.io/rogue/interfaces/index.html) application that is launched to collect and stream the data.
-**The Rogue application is being handled by HPS/SLAC personell.**
+### online
+Our [Rogue](https://slaclab.github.io/rogue/interfaces/index.html) application that is launched to collect and stream data.
+This software is deeply tied to the firmware that will be on our front-end hardware, 
+so it is being held in a separate repository [slaclab/ldmx-daq](github.com/slaclab/ldmx-daq) which is private.
 
 ### reformat
 <a href="https://github.com/LDMX-Software/daq/actions/workflows/reformat_test.yml" alt="Actions">
