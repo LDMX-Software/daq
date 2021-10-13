@@ -45,3 +45,6 @@ add_subdirectory(Reformat)
 
 # specific hexactrl-sw translator
 add_subdirectory(HexaBoard)
+
+# UMN TestStand
+add_subdirectory(UMNTestStand)
