@@ -1,5 +1,5 @@
-#ifndef UMNTESTSTAND_UTILITY_READER_H_
-#define UMNTESTSTAND_UTILITY_READER_H_
+#ifndef REFORMAT_UTILITY_READER_H_
+#define REFORMAT_UTILITY_READER_H_
 
 #include <iostream> //debuggin
 #include <fstream>
@@ -7,7 +7,6 @@
 #include <type_traits>
 
 namespace reformat {
-namespace umnteststand {
 namespace utility {
 
 /**
@@ -217,10 +216,9 @@ class Reader {
  private:
   /// file stream we are reading from
   std::ifstream file_;
-};  // RawDataFile
+};  // Reader
 
 }  // namespace utility
-}
-}
+}  // reformat
 
 #endif  

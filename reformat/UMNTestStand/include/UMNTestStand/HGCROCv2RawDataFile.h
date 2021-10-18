@@ -5,7 +5,7 @@
 #include <iostream>
 
 #include "Reformat/RawDataFile.h"
-#include "UMNTestStand/Reader.h"
+#include "Reformat/Utility/Reader.h"
 
 namespace reformat {
 
@@ -35,7 +35,7 @@ class HGCROCv2RawDataFile : public reformat::RawDataFile {
 
  private:
   /// the input file 
-  utility::Reader reader_;
+  reformat::utility::Reader reader_;
   /// the name of the output event object
   std::string buffer_name_;
 
