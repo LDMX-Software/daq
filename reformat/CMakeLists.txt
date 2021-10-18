@@ -48,3 +48,6 @@ add_subdirectory(HexaBoard)
 
 # UMN TestStand
 add_subdirectory(UMNTestStand)
+
+# TestBeam intermediate bandaids
+add_subdirectory(TestBeam)
