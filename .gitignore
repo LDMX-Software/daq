@@ -4,3 +4,8 @@
 # ignore buffer files from text editors
 *~
 *.swp
+
+# data files
+*.raw
+*.dat
+*.root
