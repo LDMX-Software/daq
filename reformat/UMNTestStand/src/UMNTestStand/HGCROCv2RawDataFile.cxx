@@ -22,7 +22,7 @@ bool HGCROCv2RawDataFile::next(framework::Event& event) {
      *
      * <name> (bits)
      *
-     * VERSION (4) | FPGA_ID (8) | NLINKS (6) | 0 | LEN (12)
+     * VERSION (4) | FPGA_ID (8) | NLINKS (6) | 00 | LEN (12)
      * BX ID (12) | RREQ (10) | OR (10)
      * RID ok (1) | CDC ok (1) | LEN3 (6) |
      *  RID ok (1) | CDC ok (1) | LEN2 (6) |
