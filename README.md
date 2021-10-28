@@ -1,3 +1,6 @@
+# STALE
+This repository was helpful for developing in preparation for the test beam, but now most developments are occuring within either the slaclab/ldmx-daq repository or ldmx-sw itself.
+
 # daq
 **D**ata **Aq**uisition
 
